@@ -15,11 +15,6 @@ class App extends Component {
     recettes: {}
   }
 
-  ajouterRecette = recette =>{
-    const recettes = {...this.state.recettes}
-    recettes[`recette-${Date.now()}`] = recette
-    this.setState({ recettes })
-  }
 // Synchronisation avec la base de donnée au moment ou l'application se charge
 componentDidMount (){
   this.ref = base.syncState(`/${this.state.pseudo}/recettes`,{
@@ -33,8 +28,28 @@ componentWillUnmount (){
   base.removeBinding(this.ref)
 }
 // ___________________________________________________________________________________
+
+ajouterRecette = recette =>{
+  const recettes = {...this.state.recettes}
+  recettes[`recette-${Date.now()}`] = recette
+  this.setState({ recettes })
+}
+
+// Cette function nous permet de mettre à jours les recettes
+majRecette = (key, newRecette) =>{
+  const recettes = {...this.state.recettes}
+  recettes[key] = newRecette
+  this.setState({ recettes })
+}
+
+supprimerRecette = key =>{
+  const recettes = {...this.state.recettes}
+  recettes[key] = null
+  this.setState({ recettes })
+}
   
 chargerExemple = () => this.setState({ recettes })
+
   render () {
     const cards = Object.keys(this.state.recettes)
     .map(key => <Card key={key} details = {this.state.recettes[key]}/>)
@@ -45,7 +60,10 @@ chargerExemple = () => this.setState({ recettes })
           {cards}
         </div>
         <Admin
-        ajouterRecette={this.state.ajouterRecette}
+        recettes={this.state.recettes}
+        ajouterRecette={this.ajouterRecette}
+        majRecette={this.majRecette}
+        supprimerRecette={this.supprimerRecette}
         chargerExemple={this.chargerExemple}/>
       </div>
     )
