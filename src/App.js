@@ -60,6 +60,7 @@ chargerExemple = () => this.setState({ recettes })
           {cards}
         </div>
         <Admin
+        pseudo={this.state.pseudo}
         recettes={this.state.recettes}
         ajouterRecette={this.ajouterRecette}
         majRecette={this.majRecette}
